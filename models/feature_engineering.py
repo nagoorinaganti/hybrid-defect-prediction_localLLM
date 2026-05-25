@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv('../data/commits.csv')
+df = pd.read_csv('data/commits.csv')
 
 # Derived features
 df['risk_density'] = (
@@ -18,7 +18,7 @@ df['activity_score'] = (
 )
 
 df.to_csv(
-    '../data/processed_commits.csv',
+    'data/processed_commits.csv',
     index=False
 )
 

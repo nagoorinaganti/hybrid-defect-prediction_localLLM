@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import VotingClassifier
 import joblib
 
-df = pd.read_csv('../data/processed_commits.csv')
+df = pd.read_csv('data/processed_commits.csv')
 
 X = df[[
     'loc',
@@ -47,7 +47,7 @@ model.fit(X_train, y_train)
 
 joblib.dump(
     model,
-    'saved_model.pkl'
+    'models/saved_model.pkl'
 )
 
 print("Model trained successfully.")
