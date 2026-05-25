@@ -2,6 +2,7 @@ import os
 import streamlit as st
 import matplotlib.pyplot as plt
 import json
+from streamlit_autorefresh import st_autorefresh
 
 st.set_page_config(
     page_title="Hybrid ML + LLM Dashboard",
@@ -10,6 +11,12 @@ st.set_page_config(
 
 st.title(
     "Hybrid ML + LLM Defect Prediction Dashboard"
+)
+
+# Auto refresh every 5 seconds
+st_autorefresh(
+    interval=5000,
+    key="dashboard_refresh"
 )
 
 # Get project root path

@@ -1,11 +1,19 @@
 {
-    "ml_probability": 0.01,
-    "semantic_score": 0.1,
-    "final_score": 0.03,
+    "ml_probability": 0.05,
+    "semantic_score": 0.65,
+    "final_score": 0.23,
     "quality_gate": "PASSED",
     "llm_analysis": {
-        "semantic_risk_score": 0.1,
-        "detected_patterns": [],
-        "analysis": []
+        "semantic_risk_score": 0.65,
+        "detected_patterns": [
+            "temporary",
+            "workaround",
+            "crash"
+        ],
+        "analysis": [
+            "Detected risky keyword: temporary",
+            "Detected risky keyword: workaround",
+            "Detected risky keyword: crash"
+        ]
     }
 }
