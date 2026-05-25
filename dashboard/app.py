@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import matplotlib.pyplot as plt
 import json
@@ -11,10 +12,20 @@ st.title(
     "Hybrid ML + LLM Defect Prediction Dashboard"
 )
 
-# Load latest prediction
-with open(
-    "reports/latest_prediction.json"
-) as f:
+# Get project root path
+BASE_DIR = os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))
+)
+
+# Build JSON file path
+json_path = os.path.join(
+    BASE_DIR,
+    "reports",
+    "latest_prediction.json"
+)
+
+# Load prediction results
+with open(json_path) as f:
 
     result = json.load(f)
 
