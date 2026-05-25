@@ -1,3 +1,5 @@
+import os
+import json
 from models.predict import predict_defect
 
 from utils.git_utils import (
@@ -37,9 +39,32 @@ print("\n========== FINAL RESULT ==========\n")
 print(result)
 
 # Save latest prediction
-with open(
-    "reports/latest_prediction.json",
-    "w"
-) as f:
+# Get project root directory
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
+
+# Reports folder path
+reports_dir = os.path.join(
+    BASE_DIR,
+    "reports"
+)
+
+# Create reports folder if missing
+os.makedirs(
+    reports_dir,
+    exist_ok=True
+)
+
+# JSON output path
+json_path = os.path.join(
+    reports_dir,
+    "latest_prediction.json"
+)
+
+# Save latest prediction
+with open(json_path, "w") as f:
 
     json.dump(result, f, indent=4)
+
+print("\nPrediction JSON updated successfully.")
