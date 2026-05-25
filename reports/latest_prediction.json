@@ -1,0 +1,11 @@
+{
+    "ml_probability": 0.01,
+    "semantic_score": 0.1,
+    "final_score": 0.03,
+    "quality_gate": "PASSED",
+    "llm_analysis": {
+        "semantic_risk_score": 0.1,
+        "detected_patterns": [],
+        "analysis": []
+    }
+}

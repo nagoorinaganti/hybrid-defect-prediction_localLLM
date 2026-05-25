@@ -1,55 +1,66 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import json
 
-# Page configuration
 st.set_page_config(
     page_title="Hybrid ML + LLM Dashboard",
     layout="wide"
 )
 
-# Title
 st.title(
     "Hybrid ML + LLM Defect Prediction Dashboard"
 )
 
-# Metrics Row
+# Load latest prediction
+with open(
+    "reports/latest_prediction.json"
+) as f:
+
+    result = json.load(f)
+
+# Metrics
 col1, col2, col3 = st.columns(3)
 
 with col1:
+
     st.metric(
-        "Defect Probability",
-        "87%"
+        "ML Probability",
+        f"{result['ml_probability'] * 100:.0f}%"
     )
 
 with col2:
+
     st.metric(
         "Semantic Risk Score",
-        "0.65"
+        result['semantic_score']
     )
 
 with col3:
+
     st.metric(
         "Quality Gate",
-        "FAILED"
+        result['quality_gate']
     )
 
-# Warning alert
-st.warning(
-    "High-risk commit detected during CI/CD execution."
-)
+# Risk warning
+if result["quality_gate"] == "FAILED":
 
-# Risk Patterns
-st.subheader("Detected Risk Patterns")
+    st.warning(
+        "High-risk commit detected."
+    )
 
-st.write([
-    "temporary",
-    "workaround",
-    "crash"
-])
+else:
 
-# Accuracy Comparison Graph
-st.subheader("Model Accuracy Comparison")
+    st.success(
+        "Low-risk commit detected."
+    )
 
+# Final score
+st.subheader("Final Hybrid Risk Score")
+
+st.write(result["final_score"])
+
+# Accuracy Graph
 models = [
     "Logistic Regression",
     "Random Forest",
@@ -69,48 +80,16 @@ ax.bar(models, accuracy)
 ax.set_ylabel("Accuracy (%)")
 
 ax.set_title(
-    "Accuracy Comparison"
+    "Model Accuracy Comparison"
 )
 
 st.pyplot(fig)
 
-# Defect Escape Rate
-st.subheader("Defect Escape Rate Reduction")
+# Risk patterns
+st.subheader("Detected Semantic Patterns")
 
-labels = [
-    "Traditional CI/CD",
-    "Hybrid Framework"
-]
+if "llm_analysis" in result:
 
-values = [
-    18.6,
-    8.7
-]
-
-fig2, ax2 = plt.subplots()
-
-ax2.bar(labels, values)
-
-ax2.set_ylabel(
-    "Defect Escape Rate (%)"
-)
-
-ax2.set_title(
-    "Defect Escape Rate Reduction"
-)
-
-st.pyplot(fig2)
-
-# Pipeline Status
-st.subheader("CI/CD Pipeline Status")
-
-st.success(
-    "Pipeline execution completed successfully."
-)
-
-# Footer
-st.markdown("---")
-
-st.caption(
-    "BITS WILP Dissertation Prototype"
-)
+    st.write(
+        result["llm_analysis"]
+    )
