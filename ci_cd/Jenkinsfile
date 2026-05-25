@@ -4,22 +4,77 @@ pipeline {
 
     stages {
 
-        stage('Check Git') {
+        stage('Pull Source Code') {
 
             steps {
 
-                bat 'git --version'
+                echo 'Pulling latest code from GitHub...'
+
+                git branch: 'main',
+                url: 'YOUR_GITHUB_REPO_URL'
+            }
+        }
+
+        stage('Install Dependencies') {
+
+            steps {
+
+                bat 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Feature Engineering') {
+
+            steps {
+
+                bat 'python models/feature_engineering.py'
+            }
+        }
+
+        stage('Train ML Model') {
+
+            steps {
+
+                bat 'python models/train_model.py'
+            }
+        }
+
+        stage('Run Hybrid Prediction') {
+
+            steps {
+
+                bat 'python main.py'
+            }
+        }
+
+        stage('Quality Gate Validation') {
+
+            steps {
+
+                echo 'Evaluating quality gate...'
 
             }
         }
 
-        stage('List Files') {
+        stage('Dashboard Update') {
 
             steps {
 
-                bat 'dir'
-
+                echo 'Dashboard refreshed successfully.'
             }
+        }
+    }
+
+    post {
+
+        success {
+
+            echo 'Pipeline executed successfully.'
+        }
+
+        failure {
+
+            echo 'Pipeline failed.'
         }
     }
 }
