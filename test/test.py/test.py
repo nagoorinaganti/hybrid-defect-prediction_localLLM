@@ -71,22 +71,6 @@ class WeightedGraph:
 # Simulation
 # -----------------------------
 
-def generate_random_graph(size: int = 10) -> WeightedGraph:
-    g = WeightedGraph()
-
-    for i in range(size):
-        node = chr(65 + i)
-        g.add_node(node, random.randint(0, 100), random.randint(0, 100))
-
-    nodes = list(g.graph.keys())
-
-    for _ in range(size * 2):
-        a, b = random.sample(nodes, 2)
-        weight = random.randint(1, 20)
-        g.add_edge(a, b, weight)
-
-    return g
-
 
 def main():
     graph = generate_random_graph(12)
