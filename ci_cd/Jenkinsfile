@@ -4,77 +4,22 @@ pipeline {
 
     stages {
 
-        stage('Pull Source Code') {
+        stage('Check Git') {
 
             steps {
 
-                echo 'Pulling latest code from GitHub...'
-
-                git branch: 'main',
-                url: 'https://github.com/nagoorinaganti/hybrid-defect-prediction.git'
-            }
-        }
-
-        stage('Install Dependencies') {
-
-            steps {
-
-                bat 'pip install -r requirements.txt'
-            }
-        }
-
-        stage('Feature Engineering') {
-
-            steps {
-
-                bat 'python models/feature_engineering.py'
-            }
-        }
-
-        stage('Train ML Model') {
-
-            steps {
-
-                bat 'python models/train_model.py'
-            }
-        }
-
-        stage('Run Hybrid Prediction') {
-
-            steps {
-
-                bat 'python main.py'
-            }
-        }
-
-        stage('Quality Gate Validation') {
-
-            steps {
-
-                echo 'Evaluating quality gate...'
+                bat 'git --version'
 
             }
         }
 
-        stage('Dashboard Update') {
+        stage('List Files') {
 
             steps {
 
-                echo 'Dashboard refreshed successfully.'
+                bat 'dir'
+
             }
-        }
-    }
-
-    post {
-
-        success {
-
-            echo 'Pipeline executed successfully.'
-        }
-
-        failure {
-
-            echo 'Pipeline failed.'
         }
     }
 }
