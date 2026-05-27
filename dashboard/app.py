@@ -1,113 +1,70 @@
-import os
 import streamlit as st
-import matplotlib.pyplot as plt
 import json
-from streamlit_autorefresh import st_autorefresh
+import os
 
 st.set_page_config(
-    page_title="Hybrid ML + LLM Dashboard",
+    page_title="Hybrid Defect Prediction Dashboard",
     layout="wide"
 )
 
 st.title(
-    "Hybrid ML + LLM Defect Prediction Dashboard"
+    "Hybrid ML + Semantic Risk Dashboard"
 )
 
-# Auto refresh every 5 seconds
-st_autorefresh(
-    interval=5000,
-    key="dashboard_refresh"
-)
 
-# Get project root path
+# ------------------------------------------------
+# JSON Path
+# ------------------------------------------------
+
 BASE_DIR = os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))
 )
 
-# Build JSON file path
 json_path = os.path.join(
     BASE_DIR,
     "reports",
     "latest_prediction.json"
 )
 
-# Load prediction results
+
+# ------------------------------------------------
+# Load Results
+# ------------------------------------------------
+
 with open(json_path) as f:
 
     result = json.load(f)
 
-# Metrics
-col1, col2, col3 = st.columns(3)
 
-with col1:
+# ------------------------------------------------
+# Display Scores
+# ------------------------------------------------
 
-    st.metric(
-        "ML Probability",
-        f"{result['ml_probability'] * 100:.0f}%"
-    )
+st.subheader("Prediction Scores")
 
-with col2:
-
-    st.metric(
-        "Semantic Risk Score",
-        result['semantic_score']
-    )
-
-with col3:
-
-    st.metric(
-        "Quality Gate",
-        result['quality_gate']
-    )
-
-# Risk warning
-if result["quality_gate"] == "FAILED":
-
-    st.warning(
-        "High-risk commit detected."
-    )
-
-else:
-
-    st.success(
-        "Low-risk commit detected."
-    )
-
-# Final score
-st.subheader("Final Hybrid Risk Score")
-
-st.write(result["final_score"])
-
-# Accuracy Graph
-models = [
-    "Logistic Regression",
-    "Random Forest",
-    "Hybrid ML + LLM"
-]
-
-accuracy = [
-    78.4,
-    86.7,
-    91.2
-]
-
-fig, ax = plt.subplots()
-
-ax.bar(models, accuracy)
-
-ax.set_ylabel("Accuracy (%)")
-
-ax.set_title(
-    "Model Accuracy Comparison"
+st.write(
+    f"ML Probability: {result['ml_probability']}"
 )
 
-st.pyplot(fig)
+st.write(
+    f"Semantic Score: {result['semantic_score']}"
+)
 
-# Risk patterns
-st.subheader("Detected Semantic Patterns")
+st.write(
+    f"Final Hybrid Score: {result['final_score']}"
+)
 
-if "llm_analysis" in result:
+st.write(
+    f"Quality Gate: {result['quality_gate']}"
+)
 
-    st.write(
-        result["llm_analysis"]
-    )
+
+# ------------------------------------------------
+# Features
+# ------------------------------------------------
+
+st.subheader(
+    "Extracted Software Engineering Metrics"
+)
+
+st.json(result["features"])

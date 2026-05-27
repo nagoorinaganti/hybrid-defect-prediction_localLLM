@@ -1,70 +1,111 @@
-import os
 import json
+import os
+
 from models.predict import predict_defect
 
-from utils.git_utils import (
-    get_latest_commit_message,
-    get_git_metrics
-)
+from utils.feature_extraction import *
 
-import json
 
-# Real commit message
+# ------------------------------------------------
+# Extract commit message
+# ------------------------------------------------
+
 commit_message = get_latest_commit_message()
 
-# Real Git metrics
-metrics = get_git_metrics()
 
-print("\n========== COMMIT MESSAGE ==========\n")
+# ------------------------------------------------
+# Extract Git metrics
+# ------------------------------------------------
 
-print(commit_message)
+git_metrics = get_git_diff_metrics()
 
-print("\n========== GIT METRICS ==========\n")
 
-print(metrics)
+# ------------------------------------------------
+# Complexity
+# ------------------------------------------------
 
-# Run prediction
+complexity = get_complexity("main.py")
+
+
+# ------------------------------------------------
+# Commit Frequency
+# ------------------------------------------------
+
+commit_frequency = get_commit_frequency()
+
+
+# ------------------------------------------------
+# Developer Activity
+# ------------------------------------------------
+
+developer_activity = get_developer_activity()
+
+
+# ------------------------------------------------
+# Historical defect indicators
+# ------------------------------------------------
+
+historical_defects = get_historical_defects(
+    commit_message
+)
+
+
+# ------------------------------------------------
+# Prediction
+# ------------------------------------------------
+
 result = predict_defect(
-    loc=metrics["loc"],
-    complexity=metrics["complexity"],
-    churn=metrics["churn"],
-    commit_frequency=metrics["commit_frequency"],
-    developer_experience=metrics["developer_experience"],
-    files_modified=metrics["files_modified"],
+
+    loc=git_metrics["loc"],
+
+    complexity=complexity,
+
+    churn=git_metrics["churn"],
+
+    commit_frequency=commit_frequency,
+
+    developer_activity=developer_activity,
+
+    files_modified=git_metrics["files_modified"],
+
+    historical_defects=historical_defects,
+
     commit_message=commit_message
 )
+
 
 print("\n========== FINAL RESULT ==========\n")
 
 print(result)
 
-# Save latest prediction
-# Get project root directory
+
+# ------------------------------------------------
+# Save prediction
+# ------------------------------------------------
+
 BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
 )
 
-# Reports folder path
 reports_dir = os.path.join(
     BASE_DIR,
     "reports"
 )
 
-# Create reports folder if missing
 os.makedirs(
     reports_dir,
     exist_ok=True
 )
 
-# JSON output path
 json_path = os.path.join(
     reports_dir,
     "latest_prediction.json"
 )
 
-# Save latest prediction
 with open(json_path, "w") as f:
 
     json.dump(result, f, indent=4)
 
-print("\nPrediction JSON updated successfully.")
+print(
+    "\nPrediction JSON updated successfully."
+)

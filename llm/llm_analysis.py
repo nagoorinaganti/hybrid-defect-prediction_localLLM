@@ -1,41 +1,40 @@
 def analyze_commit(commit_message):
 
-    risky_keywords = {
-        "temporary": 0.15,
-        "workaround": 0.20,
-        "crash": 0.20,
-        "memory leak": 0.20,
-        "urgent": 0.10,
-        "hotfix": 0.15,
-        "rollback": 0.15,
-        "quick patch": 0.15,
-        "bypass": 0.10
+    risk_keywords = {
+
+        "temporary": 0.3,
+
+        "workaround": 0.4,
+
+        "rollback": 0.4,
+
+        "hotfix": 0.3,
+
+        "crash": 0.5,
+
+        "urgent": 0.2
     }
 
-    score = 0.1
+    semantic_score = 0
 
     detected_patterns = []
 
-    explanation = []
+    for word, weight in risk_keywords.items():
 
-    commit_lower = commit_message.lower()
+        if word in commit_message.lower():
 
-    for keyword, weight in risky_keywords.items():
+            semantic_score += weight
 
-        if keyword in commit_lower:
+            detected_patterns.append(word)
 
-            score += weight
-
-            detected_patterns.append(keyword)
-
-            explanation.append(
-                f"Detected risky keyword: {keyword}"
-            )
-
-    score = min(score, 1.0)
+    semantic_score = min(
+        semantic_score,
+        1.0
+    )
 
     return {
-        "semantic_risk_score": round(score, 2),
-        "detected_patterns": detected_patterns,
-        "analysis": explanation
+
+        "semantic_score": semantic_score,
+
+        "patterns": detected_patterns
     }
