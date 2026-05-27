@@ -1,15 +1,15 @@
 {
-    "ml_probability": 0.48,
-    "semantic_score": 0.4,
-    "final_score": 0.46,
+    "ml_probability": 0.56,
+    "semantic_score": 1.0,
+    "final_score": 0.69,
     "quality_gate": "PASSED",
     "features": {
         "loc": 0,
         "complexity": 1,
         "churn": 0,
-        "commit_frequency": 25,
-        "developer_activity": 25,
+        "commit_frequency": 26,
+        "developer_activity": 26,
         "files_modified": 0,
-        "historical_defects": 1
+        "historical_defects": 3
     }
 }

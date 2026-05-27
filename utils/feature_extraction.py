@@ -27,16 +27,17 @@ def get_git_diff_metrics():
     )
 
     output = result.decode("utf-8")
+    print(output)
 
     files_modified = 0
     insertions = 0
     deletions = 0
 
-    file_match = re.search(r"(\\d+) file[s]?", output)
+    file_match = re.search(r"(\d+) file[s]?", output)
 
-    insert_match = re.search(r"(\\d+) insertion[s]?", output)
+    insert_match = re.search(r"(\d+) insertion[s]?", output)
 
-    delete_match = re.search(r"(\\d+) deletion[s]?", output)
+    delete_match = re.search(r"(\d+) deletion[s]?", output)
 
     if file_match:
         files_modified = int(file_match.group(1))
