@@ -24,7 +24,9 @@ git_metrics = get_git_diff_metrics()
 # Complexity
 # ------------------------------------------------
 
-complexity = get_complexity("main.py")
+latest_file = get_latest_python_file()
+
+complexity = get_complexity(latest_file)
 
 
 # ------------------------------------------------

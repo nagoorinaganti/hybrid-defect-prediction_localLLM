@@ -1,5 +1,5 @@
 import joblib
-
+import pandas as pd
 from llm.llm_analysis import analyze_commit
 
 
@@ -27,22 +27,22 @@ def predict_defect(
     commit_message
 ):
 
-    features = [[
+    features = pd.DataFrame([{
 
-        loc,
+    "loc": loc,
 
-        complexity,
+    "complexity": complexity,
 
-        churn,
+    "churn": churn,
 
-        commit_frequency,
+    "commit_frequency": commit_frequency,
 
-        developer_activity,
+    "developer_activity": developer_activity,
 
-        files_modified,
+    "files_modified": files_modified,
 
-        historical_defects
-    ]]
+    "historical_defects": historical_defects
+}])
 
     ml_probability = model.predict_proba(
         features

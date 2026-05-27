@@ -23,7 +23,7 @@ def get_latest_commit_message():
 def get_git_diff_metrics():
 
     result = subprocess.check_output(
-        ["git", "diff", "--shortstat", "HEAD~1"]
+        ["git", "show", "--stat", "--oneline", "HEAD"]
     )
 
     output = result.decode("utf-8")
@@ -32,11 +32,11 @@ def get_git_diff_metrics():
     insertions = 0
     deletions = 0
 
-    file_match = re.search(r"(\\d+) file", output)
+    file_match = re.search(r"(\\d+) file[s]?", output)
 
-    insert_match = re.search(r"(\\d+) insertion", output)
+    insert_match = re.search(r"(\\d+) insertion[s]?", output)
 
-    delete_match = re.search(r"(\\d+) deletion", output)
+    delete_match = re.search(r"(\\d+) deletion[s]?", output)
 
     if file_match:
         files_modified = int(file_match.group(1))
@@ -150,3 +150,31 @@ def get_historical_defects(commit_message):
             count += 1
 
     return count
+
+# ------------------------------------------------
+# Latest modified Python file
+# ------------------------------------------------
+
+def get_latest_python_file():
+
+    result = subprocess.check_output(
+
+        [
+            "git",
+            "diff-tree",
+            "--no-commit-id",
+            "--name-only",
+            "-r",
+            "HEAD"
+        ]
+    )
+
+    files = result.decode("utf-8").splitlines()
+
+    for file in files:
+
+        if file.endswith(".py"):
+
+            return file
+
+    return "main.py"
