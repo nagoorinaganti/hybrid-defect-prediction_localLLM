@@ -2,9 +2,10 @@ import subprocess
 import re
 from radon.complexity import cc_visit
 
-# -----------------------------------
+
+# ---------------------------------------------------
 # Get latest commit message
-# -----------------------------------
+# ---------------------------------------------------
 
 def get_latest_commit_message():
 
@@ -15,9 +16,9 @@ def get_latest_commit_message():
     return result.decode("utf-8").strip()
 
 
-# -----------------------------------
-# Get Lines of Code + Churn + Files
-# -----------------------------------
+# ---------------------------------------------------
+# Extract LOC + Churn + Modified Files
+# ---------------------------------------------------
 
 def get_git_diff_metrics():
 
@@ -32,7 +33,9 @@ def get_git_diff_metrics():
     deletions = 0
 
     file_match = re.search(r"(\\d+) file", output)
+
     insert_match = re.search(r"(\\d+) insertion", output)
+
     delete_match = re.search(r"(\\d+) deletion", output)
 
     if file_match:
@@ -49,15 +52,18 @@ def get_git_diff_metrics():
     churn = loc
 
     return {
+
         "loc": loc,
+
         "churn": churn,
+
         "files_modified": files_modified
     }
 
 
-# -----------------------------------
+# ---------------------------------------------------
 # Commit Frequency
-# -----------------------------------
+# ---------------------------------------------------
 
 def get_commit_frequency():
 
@@ -65,23 +71,19 @@ def get_commit_frequency():
         ["git", "rev-list", "--count", "HEAD"]
     )
 
-    count = int(result.decode("utf-8").strip())
+    return int(
+        result.decode("utf-8").strip()
+    )
 
-    return count
 
-
-# -----------------------------------
+# ---------------------------------------------------
 # Developer Activity
-# -----------------------------------
+# ---------------------------------------------------
 
 def get_developer_activity():
 
     result = subprocess.check_output(
-        [
-            "git",
-            "log",
-            "--pretty=%an"
-        ]
+        ["git", "log", "--pretty=%an"]
     )
 
     authors = result.decode("utf-8").splitlines()
@@ -89,9 +91,9 @@ def get_developer_activity():
     return len(authors)
 
 
-# -----------------------------------
+# ---------------------------------------------------
 # Cyclomatic Complexity
-# -----------------------------------
+# ---------------------------------------------------
 
 def get_complexity(file_path):
 
@@ -118,20 +120,25 @@ def get_complexity(file_path):
         return 1
 
 
-# -----------------------------------
+# ---------------------------------------------------
 # Historical Defect Indicators
-# -----------------------------------
+# ---------------------------------------------------
 
-def get_defect_indicators(commit_message):
+def get_historical_defects(commit_message):
 
     risky_keywords = [
+
         "temporary",
+
         "workaround",
+
         "rollback",
+
         "hotfix",
+
         "crash",
-        "urgent",
-        "quick fix"
+
+        "urgent"
     ]
 
     count = 0
